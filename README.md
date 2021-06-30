@@ -8,6 +8,6 @@
 python main.py
 ```
 
-![yolov5 pyqt5](https://image.xugaoxiang.com/imgs/2021/06/7792697234b2f7aa.png)
+![yolov5 pyqt5](data/screenshot.png)
 
-![yolov5 pyqt5](https://image.xugaoxiang.com/imgs/2021/06/04f610330e7d1e4d.gif)
+![yolov5 pyqt5](data/screenshot.gif)
