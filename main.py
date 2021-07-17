@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\untitled.ui'
+# Form implementation generated from reading ui file '.\project.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
@@ -98,6 +98,20 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_img.setFont(font)
         self.pushButton_img.setObjectName("pushButton_img")
         self.verticalLayout.addWidget(self.pushButton_img, 0, QtCore.Qt.AlignHCenter)
+        self.pushButton_camera = QtWidgets.QPushButton(self.centralwidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pushButton_camera.sizePolicy().hasHeightForWidth())
+        self.pushButton_camera.setSizePolicy(sizePolicy)
+        self.pushButton_camera.setMinimumSize(QtCore.QSize(150, 100))
+        self.pushButton_camera.setMaximumSize(QtCore.QSize(150, 100))
+        font = QtGui.QFont()
+        font.setFamily("Agency FB")
+        font.setPointSize(12)
+        self.pushButton_camera.setFont(font)
+        self.pushButton_camera.setObjectName("pushButton_camera")
+        self.verticalLayout.addWidget(self.pushButton_camera, 0, QtCore.Qt.AlignHCenter)
         self.pushButton_video = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -112,8 +126,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_video.setFont(font)
         self.pushButton_video.setObjectName("pushButton_video")
         self.verticalLayout.addWidget(self.pushButton_video, 0, QtCore.Qt.AlignHCenter)
-        self.verticalLayout.setStretch(0, 1)
-        self.verticalLayout.setStretch(1, 1)
+        self.verticalLayout.setStretch(2, 1)
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setObjectName("label")
@@ -137,12 +150,14 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "PyQt5+YOLOv5示例"))
         self.pushButton_img.setText(_translate("MainWindow", "图片检测"))
+        self.pushButton_camera.setText(_translate("MainWindow", "摄像头检测"))
         self.pushButton_video.setText(_translate("MainWindow", "视频检测"))
         self.label.setText(_translate("MainWindow", "TextLabel"))
 
     def init_slots(self):
         self.pushButton_img.clicked.connect(self.button_image_open)
         self.pushButton_video.clicked.connect(self.button_video_open)
+        self.pushButton_camera.clicked.connect(self.button_camera_open)
         self.timer_video.timeout.connect(self.show_video_frame)
 
     def init_logo(self):
@@ -194,11 +209,32 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         video_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "打开视频", "", "*.mp4;;*.avi;;All Files(*)")
         flag = self.cap.open(video_name)
         if flag == False:
-            QtWidgets.QMessageBox.warning(self, u"Warning", u"打开视频失败", buttons=QtWidgets.QMessageBox.Ok,defaultButton=QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.warning(self, u"Warning", u"打开视频失败", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
         else:
             self.timer_video.start(30)
             self.pushButton_video.setDisabled(True)
             self.pushButton_img.setDisabled(True)
+            self.pushButton_camera.setDisabled(True)
+
+    def button_camera_open(self):
+        if not self.timer_video.isActive():
+            # 默认使用第一个本地camera
+            flag = self.cap.open(0)
+            if flag == False:
+                QtWidgets.QMessageBox.warning(self, u"Warning", u"打开摄像头失败", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
+            else:
+                self.timer_video.start(30)
+                self.pushButton_video.setDisabled(True)
+                self.pushButton_img.setDisabled(True)
+                self.pushButton_camera.setText(u"关闭摄像头")
+        else:
+            self.timer_video.stop()
+            self.cap.release()
+            self.label.clear()
+            self.init_logo()
+            self.pushButton_video.setDisabled(False)
+            self.pushButton_img.setDisabled(False)
+            self.pushButton_camera.setText(u"摄像头检测")
 
     def show_video_frame(self):
         name_list = []
