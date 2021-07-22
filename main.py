@@ -200,6 +200,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                         name_list.append(self.names[int(cls)])
                         plot_one_box(xyxy, showimg, label=label, color=self.colors[int(cls)], line_thickness=2)
 
+        cv2.imwrite('prediction.jpg', showimg)
         self.result = cv2.cvtColor(showimg, cv2.COLOR_BGR2BGRA)
         self.result = cv2.resize(self.result, (640, 480), interpolation=cv2.INTER_AREA)
         self.QtImg = QtGui.QImage(self.result.data, self.result.shape[1], self.result.shape[0], QtGui.QImage.Format_RGB32)
