@@ -30,6 +30,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.init_logo()
         self.init_slots()
         self.cap = cv2.VideoCapture()
+        self.out = None
+        # self.out = cv2.VideoWriter('prediction.avi', cv2.VideoWriter_fourcc(*'XVID'), 20.0, (640, 480))
 
         parser = argparse.ArgumentParser()
         parser.add_argument('--weights', nargs='+', type=str, default='weights/yolov5s.pt', help='model.pt path(s)')
@@ -212,6 +214,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         if flag == False:
             QtWidgets.QMessageBox.warning(self, u"Warning", u"打开视频失败", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
         else:
+            self.out = cv2.VideoWriter('prediction.avi', cv2.VideoWriter_fourcc(*'MJPG'), 20, (int(self.cap.get(3)), int(self.cap.get(4))))
             self.timer_video.start(30)
             self.pushButton_video.setDisabled(True)
             self.pushButton_img.setDisabled(True)
@@ -224,6 +227,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             if flag == False:
                 QtWidgets.QMessageBox.warning(self, u"Warning", u"打开摄像头失败", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
             else:
+                self.out = cv2.VideoWriter('prediction.avi', cv2.VideoWriter_fourcc(*'MJPG'), 20, (int(self.cap.get(3)), int(self.cap.get(4))))
                 self.timer_video.start(30)
                 self.pushButton_video.setDisabled(True)
                 self.pushButton_img.setDisabled(True)
@@ -231,6 +235,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         else:
             self.timer_video.stop()
             self.cap.release()
+            self.out.release()
             self.label.clear()
             self.init_logo()
             self.pushButton_video.setDisabled(False)
@@ -271,6 +276,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                             print(label)
                             plot_one_box(xyxy, showimg, label=label, color=self.colors[int(cls)], line_thickness=2)
 
+            self.out.write(showimg)
             show = cv2.resize(showimg, (640, 480))
             self.result = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)
             showImage = QtGui.QImage(self.result.data, self.result.shape[1], self.result.shape[0],
@@ -280,9 +286,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         else:
             self.timer_video.stop()
             self.cap.release()
+            self.out.release()
             self.label.clear()
             self.pushButton_video.setDisabled(False)
             self.pushButton_img.setDisabled(False)
+            self.pushButton_camera.setDisabled(False)
             self.init_logo()
 
 
