@@ -10,9 +10,14 @@
 pip install -r requirements.txt
 python main.py
 ```
-图片检测
+
+启动界面
 
 ![yolov5 pyqt5](data/screenshot_img.png)
+
+图片检测
+
+![yolov5 pyqt5](data/screenshot_img_1.png)
 
 视频检测
 
