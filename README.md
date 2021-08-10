@@ -13,11 +13,11 @@ python main.py
 
 启动界面
 
-![yolov5 pyqt5](data/screenshot_img.png)
+![yolov5 pyqt5](data/screenshot_app.png)
 
 图片检测
 
-![yolov5 pyqt5](data/screenshot_img_1.png)
+![yolov5 pyqt5](data/screenshot_img.png)
 
 视频检测
 
